@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Prelude/Utils.fs" />
+    <Compile Include="Prelude/Asnyc.fs" />
+    <Compile Include="Prelude/Result.fs" />
+    <Compile Include="Common.fs" />
+    <Compile Include="AbstractDocument.fs" />
+    <Compile Include="Markdown.fs" />
+    <Compile Include="HTML.fs" />
+    <Compile Include="JavaScript.fs" />
+    <Compile Include="WASM.fs" />
+    <Compile Include="PDF.fs" />
+    <Compile Include="CrossRender.fs"/>
+    <Compile Include="Library.fs" />
+  </ItemGroup>
+
+</Project>
