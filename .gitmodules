@@ -1,0 +1,3 @@
+[submodule "CrossRenderer/Prelude/.\\InformativeResult\\"]
+	path = CrossRenderer/Prelude/.\\InformativeResult\\
+	url = https://github.com/nicklecompte/InformativeResult.fs.git

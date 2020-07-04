@@ -2,6 +2,47 @@ module Common
 
 open Prelude
 
+[<Struct>]
+type FontSize =
+    | Int of (size:uint)
+    | Dec of (sizeInt:uint) * (sizeDecimal:byte)
+
+type BulletStyle =
+    | SmallDot
+    | MediumDot
+    | BigDot
+    | Cross
+    | Plus
+    | Dash
+    | O
+    | Circle
+
+type EnumerationStyle =
+    | Number of WholeNumber
+    | Letter of ASCIICharacter
+    | Decimal of WholeNumber list
+
+type Formatting =
+    | Font of FontSize
+    | Bold
+    | Italic
+    | Strikethrough
+    | BulletListItem of BulletStyle
+    | EnumeratedListItem of EnumerationStyle
+    | URL of link:string
+    | Codeblock of ProgrammingLanguage
+    | Pair of Formatting*Formatting
+    | Footnote of number:Nat * text : Text
+    
+and Text =
+    | Raw of string
+    | Formatted of Formatting*string
+    | Sequence of Text list
+
+type Heading = | Heading of level:WholeNumber * content:Text
+
+type Paragraph = | Paragraph of Text
+
 type Nat =
     | Zero
     | Succ of Nat
@@ -18,10 +59,20 @@ with
         | (Zero,_) -> Zero
         | (_,Zero) -> Zero
         | (Succ n, Succ m) -> a + (n * b)
+    static member (>) (a,b) =
+        match (a,b) with
+            | (Zero,Zero) -> false
+            | (Zero, ) -> false
+            | (_, Zero) -> true
+            | (Succ n, Succ m) -> n > m
 
 type WholeNumber =
     | One
     | SuccWhole of WholeNumber
+    member x.ToNat() =
+        match x with
+            | One -> Succ Zero
+            | SuccWhole n -> Succ (n.ToNat())
     static member One : WholeNumber = One
     static member (+) (a:WholeNumber,b:WholeNumber) =
         match (a,b) with
@@ -47,10 +98,7 @@ with
                 | (Zero, ZeroVector (_,_)) -> false
                 | (Succ Zero, ZeroVector (_,_)) -> true
 
-type private Vect<'T>(n:Nat) =
-
-    
-    
+       
 
 // [<Struct>]
 // type UTF7Char =
@@ -64,12 +112,30 @@ type EncodedCharacter =
     | UTF8  
     | UTF18
 
+/// Used for code blocks, etc
 type ProgrammingLanguage =
     | Unspecified
     | FSharp
     | Scheme
+    | Bash
+    | PowerShell
+    | CSharp
+    | C
+    | CPP
+    | Haskell
+    | Java
+    | Scala
+    | R
+    | Python
+    | Rust
 
 [<Struct>]
 type DocumentLocation =
     | RowCol of rownum:uint32 * colnum : uint16
     | RowColPage of row:uint16*col:uint16*page:uint32
+
+[<Struct>]
+type DocumentOperation<'TEncoding> =
+    | View
+    | InsertCharacter of character : 'TEncoding * location : DocumentLocation
+    | DeleteCharacter of loc : DocumentLocaton

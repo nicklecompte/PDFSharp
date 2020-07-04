@@ -1,11 +1,26 @@
 module Prelude
 
+(*
+The result types here help to distinguish at a type level errors that arise
+from correct business logic (but incorrect user input) and incorrect business
+logic (for instance, handled .NET exceptions). For ins
+*)
+
+/// Lazier (in the human sense) but quicker than InformativeResult.
 type SimpleResult<'TOk,'TError, 'TCritical> =
     | Success of 'TOK
     | Failure of 'TError
     | CriticalFailure of 'TCritical
 
-type InformativeResult<'TSuccess,'TInfo,'TWarning,'TError,'TErrorInfo, 'TCriticalError, 'TCriticalInfo> =
+type InformativeResult<
+       'TSuccess,
+       'TInfo,
+       'TWarning,       
+       'TError,         
+       'TErrorInfo,     
+       'TCriticalError, 
+       'TCriticalInfo
+    > =
     // Quick OK with nothing to report
     | OK of 'TSuccess
     // OK with user-facing info that might be of interest
@@ -52,7 +67,9 @@ module SimpleResult =
 [<RequireQualifiedAccess>]
 module InformativeResult =
 
-    let bind
+    let bind (a : InformativeResult<'SA,'I,'W,'E,'EI,'C,'CI>)
+             (nextStep : 'S -> InformativeResult<'SB,'I,'W,'E,'EI,'C,'CI>) :
+             InformativeResult<'SB,'I,'W,'E,'EI,'CI
 
     let liftSimpleResult (result : SimpleResult<'T,'U,'V>) : InformativeResult<'T,_,_,'U,str,'V,str> =
         match result with
